@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/hack.html" }
+  ],
+  "redirects": [
+    { "source": "/index.html", "destination": "/hack.html", "permanent": true }
+  ]
+}
