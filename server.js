@@ -11,6 +11,13 @@ app.use(express.json());
 const PORT = 3000;
 const JWT_SECRET = '0Ra5DS9Yty3JG9UMC9h1GMCVvhcQVoBnWE9mv9BK';
 
+// ── SERVE STATIC FRONTEND ──
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
 // ── MONGODB CONNECTION ──
 // Replace <db_password> with your actual password from MongoDB Atlas
 const MONGO_URI = 'mongodb+srv://kartheekkala2_db_user:<db_password>@cluster0.vcclwow.mongodb.net/ZeroHunger?appName=Cluster0';
