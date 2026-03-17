@@ -424,7 +424,8 @@ async function fetchTasks() {
   ];
 
   try {
-    const res = await fetch('http://localhost:3000/volunteers/nearby', {
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
+    const res = await fetch(`${API_URL}/volunteers/nearby`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) throw new Error('Backend offline');

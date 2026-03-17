@@ -547,8 +547,9 @@ async function fetchDashboardStats() {
     ]
   };
 
+  const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
   try {
-    const res = await fetch('http://localhost:3000/dashboard/stats');
+    const res = await fetch(`${API_URL}/dashboard/stats`);
     if(!res.ok) throw new Error();
     const data = await res.json();
     updateStatsUI(data);
@@ -576,8 +577,9 @@ async function fetchDonationHistory() {
     { created_at: new Date(Date.now() - 86400000), quantity: 5, food_type: 'Bakery Items', status: 'Pending' }
   ];
 
+  const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
   try {
-    const res = await fetch('http://localhost:3000/donations', {
+    const res = await fetch(`${API_URL}/donations`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if(!res.ok) throw new Error();
@@ -667,8 +669,9 @@ async function processDonation(){
   btn.innerText = 'Processing...';
   btn.disabled = true;
 
-  try {
-    const res = await fetch('http://localhost:3000/donation/create', {
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
+    try {
+      const res = await fetch(`${API_URL}/donation/create`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

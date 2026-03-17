@@ -1393,8 +1393,9 @@ async function doLogin() {
         return;
     }
 
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
     try {
-        const response = await fetch('http://localhost:3000/auth/login', {
+        const response = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -1443,8 +1444,9 @@ async function doRegister() {
         btn.disabled = true;
     }
 
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
     try {
-        const response = await fetch('http://localhost:3000/auth/register', {
+        const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password, role: currentRole || 'donor' })

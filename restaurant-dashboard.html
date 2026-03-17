@@ -477,8 +477,9 @@
             }
 
             // 3. Backend Sync (Optional)
+            const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://zero-hunger-platform-5jzg.onrender.com';
             if(token) {
-                 fetch('http://localhost:3000/donation/create', {
+                 fetch(`${API_URL}/donation/create`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({food_type: donation.foodType, quantity: donation.quantity, location: donation.location, lat: donation.lat, lng: donation.lng, phone: "Direct"})
