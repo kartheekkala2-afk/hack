@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Donor Portal | Zero Hunger Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Maps API -->
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw_S6p0kraCoy_rdETI_m_54Lwqoojdp4&callback=initAllMaps"></script>
+    <style>
+        :root {
+            --primary: #2196F3; 
+            --bg-color: #f8fbff;
+            --text-dark: #1a1a1a;
+            --text-light: #777;
+            --panel-bg: rgba(255,255,255,0.95);
+            --sidebar-bg: #0d1a26;
+            --sidebar-text: rgba(255,255,255,0.6);
+            --sidebar-hover: rgba(255,255,255,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'DM Sans', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
+
+        /* ─── LOADER ─── */
+        #loader {
+            position: fixed; inset: 0; background: #fff; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0,0,0,0.05);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── LAYOUT ─── */
+        #app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; opacity: 0; transition: opacity 0.8s ease; }
+
+        .sidebar {
+            background: var(--sidebar-bg); color: white; padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .sidebar-header {
+            font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary);
+            margin-bottom: 3rem; display: flex; align-items: center; gap: 0.8rem;
+        }
+        .nav-item {
+            padding: 1.1rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 1rem;
+            color: var(--sidebar-text); font-weight: 500; transition: all 0.3s ease;
+        }
+        .nav-item:hover, .nav-item.active { background: var(--sidebar-hover); color: white; }
+        .nav-item.active { border-left: 4px solid var(--primary); padding-left: calc(1.1rem - 4px); background: rgba(255,255,255,0.05); }
+
+        .main-content { padding: 3rem; overflow-y: auto; height: 100vh; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; }
+
+        /* ─── PANELS & CARDS ─── */
+        .dashboard-grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(12, 1fr); }
+        .panel { background: var(--panel-bg); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.02); }
+        .col-span-12 { grid-column: span 12; }
+        .col-span-8 { grid-column: span 8; }
+        .col-span-4 { grid-column: span 4; }
+
+        .metric-card {
+            background: white; padding: 1.5rem; border-radius: 16px;
+            display: flex; align-items: center; gap: 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f4f8; transition: transform 0.3s;
+        }
+        .metric-card:hover { transform: translateY(-5px); }
+        .mc-icon { font-size: 2rem; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: #f0f7ff; border-radius: 15px; }
+        .mc-info h4 { font-size: 0.85rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .mc-info h2 { font-family: 'Playfair Display'; font-size: 1.8rem; }
+
+        /* ─── FOOD GALLERY ─── */
+        .food-card {
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid #eee; position: relative;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fadeUp 0.5s ease backwards;
+        }
+        .food-card:hover { transform: scale(1.03); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .food-img { width: 100%; height: 160px; object-fit: cover; }
+        .food-meta { padding: 1rem; }
+        .food-name { font-weight: 700; margin-bottom: 0.2rem; }
+        .food-quantity { color: var(--primary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+        .live-badge { position: absolute; top: 10px; right: 10px; background: #2196F3; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: 900; }
+
+        /* ─── FORM ─── */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.6rem; color: #555; }
+        .form-input { 
+            width: 100%; padding: 1rem; border: 2px solid #eef; border-radius: 12px; 
+            font-size: 1rem; transition: 0.3s; background: #fcfcfc;
+        }
+        .form-input:focus { border-color: var(--primary); outline: none; background: #fff; }
+
+        .btn { 
+            padding: 1rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; 
+            transition: 0.3s; border: none; display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(33,150,243,0.3); }
+
+        @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+    </style>
+</head>
+<body onload="initAllMaps()">
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="font-family:'Playfair Display'; font-weight:700;">Humanity Loading...</p>
+    </div>
+
+    <div id="app">
+        <nav class="sidebar">
+            <div class="sidebar-header">🌾 ZeroHunger <span id="portal-tag" style="font-size: 0.7rem; color: #fff; opacity:0.5; display:block;">Public Donor</span></div>
+            <div id="nav-items"></div>
+            <div class="nav-item" onclick="logout()" style="margin-top:auto; color:#ff5252">🚪 Logout</div>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div>
+                    <h1 class="page-title" id="page-title">Overview</h1>
+                    <p id="page-subtitle" style="color:var(--text-light); margin-top:0.3rem;">Every bite counts.</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div style="text-align:right"><div id="user-name" style="font-weight:700">Donor</div><div id="user-role" style="font-size:0.7rem; color:var(--text-light)">Public Citizen</div></div>
+                    <div id="user-avatar" style="width:45px; height:45px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2rem;">D</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid" id="main-grid"></div>
+        </main>
+    </div>
+
+    <script>
+        const foodGallery = [
+            { name: 'Fresh Cooked Meals', qty: '45 Servings', img: 'cooked_meals_donation_1773776213538.png' },
+            { name: 'Bakery Surplus', qty: '30 Items', img: 'bakery_items_donation_1773776679805.png' },
+            { name: 'Organic Veggie Crate', qty: '25 KG', img: 'raw_vegetables_donation_1773777123012.png' }
+        ];
+
+        let googleMap = null;
+        const nav = [
+            { id: 'home', icon: '🏠', label: 'Overview', active: true },
+            { id: 'upload', icon: '📸', label: 'Upload Food Details' },
+            { id: 'request', icon: '🚚', label: 'Request Pickup' }
+        ];
+
+        function initAllMaps() {
+            // Personalize UI
+            const user = JSON.parse(localStorage.getItem('zeroHungerUser') || '{}');
+            if(user.name) {
+                document.getElementById('user-name').innerText = user.name;
+                document.getElementById('user-avatar').innerText = user.name[0].toUpperCase();
+            }
+            
+            renderNav();
+            switchTab('home');
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('app').style.opacity = 1;
+                }, 800);
+            }, 1000);
+        }
+
+        function renderNav() {
+            document.getElementById('nav-items').innerHTML = nav.map(i => `
+                <div class="nav-item ${i.active?'active':''}" onclick="switchTab('${i.id}', this)">
+                    <span>${i.icon}</span> ${i.label}
+                </div>
+            `).join('');
+        }
+
+        function switchTab(id, el) {
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+            }
+            document.getElementById('page-title').innerText = nav.find(i=>i.id===id).label;
+            renderContent(id);
+        }
+
+        function renderContent(tab) {
+            const grid = document.getElementById('main-grid');
+            let html = '';
+
+            if(tab === 'home') {
+                html = `
+                    <div class="metric-card col-span-4">
+                        <div class="mc-icon">🍱</div><div class="mc-info"><h4>Donated Today</h4><h2>1,240</h2></div>
+                    </div>
+                    <div class="metric-card col-span-4">
+                        <div class="mc-icon">🚚</div><div class="mc-info"><h4>Active Pickups</h4><h2>18</h2></div>
+                    </div>
+                    <div class="metric-card col-span-4">
+                        <div class="mc-icon">🏙️</div><div class="mc-info"><h4>Cities Reached</h4><h2>12</h2></div>
+                    </div>
+                    <div class="panel col-span-12">
+                        <h3 style="font-family:'Playfair Display'; margin-bottom:1.5rem;">Live Food Relief Feed 🗺️</h3>
+                        <div id="map" style="height:450px; border-radius:20px; border:1px solid #eee;"></div>
+                    </div>
+                `;
+                grid.innerHTML = html;
+                setTimeout(initMap, 200);
+            } 
+            else if(tab === 'upload') {
+                html = `
+                    <div class="panel col-span-8">
+                        <h3 style="font-family:'Playfair Display'; margin-bottom:1.5rem;">Add Donation Detail</h3>
+                        <form onsubmit="event.preventDefault(); publishDonationSync(this)">
+                            <div class="form-group"><label class="form-label">Food Summary</label><input type="text" name="name" class="form-input" placeholder="e.g. 50 Fresh Bread Rolls" required></div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem">
+                                <div class="form-group"><label class="form-label">Quantity</label><input type="text" name="qty" class="form-input" placeholder="e.g. 50 Items" required></div>
+                                <div class="form-group"><label class="form-label">Type</label><select name="type" class="form-input"><option>Cooked</option><option>Bakery</option><option>Raw</option></select></div>
+                            </div>
+                            <div class="form-group"><label class="form-label">Pickup Location</label><input type="text" name="addr" class="form-input" placeholder="Your residential address" required></div>
+                            <button class="btn btn-primary" style="width:100%; height:55px;">🚀 Publish Availability</button>
+                        </form>
+                    </div>
+                    <div class="panel col-span-4">
+                        <h3 style="font-family:'Playfair Display'; margin-bottom:1.5rem;">Global Feed</h3>
+                        <div style="display:grid; gap:1.2rem;">
+                            ${foodGallery.map(f => `
+                                <div class="food-card">
+                                    <div class="live-badge">LIVE</div>
+                                    <img src="${f.img}" class="food-img">
+                                    <div class="food-meta">
+                                        <div class="food-quantity">${f.qty}</div>
+                                        <div class="food-name">${f.name}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML = html;
+            }
+            else if(tab === 'request') {
+                html = `
+                    <div class="panel col-span-12" style="background: linear-gradient(135deg, #fff, #f4f9ff); min-height: 500px; display:flex; align-items:center; justify-content:center;">
+                        <div style="max-width:550px; text-align:center;">
+                            <span style="font-size:4rem;">🤝</span>
+                            <h2 style="font-family:'Playfair Display'; font-size: 2.5rem; margin: 1rem 0;">Request Volunteer</h2>
+                            <p style="color:#666; margin-bottom:2.5rem;">Cannot drop it off? Request our verified volunteer squad to pick up your donation instantly.</p>
+                            <form onsubmit="alert('🚀 Request Dispatched! Your hero is on the way.'); event.preventDefault();">
+                                <input type="text" class="form-input" placeholder="Your Landmark" style="margin-bottom:1rem;" required>
+                                <input type="text" class="form-input" placeholder="Contact Number (+91)" required>
+                                <button class="btn btn-primary" style="width:100%; height:60px; font-size:1.1rem; margin-top:2rem;">🚚 Dispatch Volunteer</button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML = html;
+            }
+        }
+
+        function initMap() {
+            const mapEl = document.getElementById("map");
+            if(!mapEl) return;
+            googleMap = new google.maps.Map(mapEl, {
+                zoom: 13, center: { lat: 28.6139, lng: 77.2090 },
+                styles: [
+                    { "elementType": "geometry", "stylers": [{ "color": "#f8fbff" }] },
+                    { "featureType": "water", "stylers": [{ "color": "#d2e5ff" }] }
+                ],
+                disableDefaultUI: true
+            });
+            for(let i=0; i<6; i++) {
+                new google.maps.Marker({
+                    position: { lat: 28.6139 + (Math.random()-0.5)*0.1, lng: 77.2090 + (Math.random()-0.5)*0.1 },
+                    map: googleMap, icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                    animation: google.maps.Animation.DROP
+                });
+            }
+        }
+
+        function publishDonationSync(form) {
+            foodGallery.unshift({ name: form.name.value, qty: form.qty.value, img: 'cooked_meals_donation_1773776213538.png' });
+            alert('🎉 Food Published! Volunteers in your area have been notified.');
+            switchTab('upload');
+        }
+
+        function logout() { localStorage.clear(); location.href = 'hack.html'; }
+    </script>
+</body>
+</html>

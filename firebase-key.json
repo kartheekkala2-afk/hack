@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "zerohungerconnect",
+  "private_key_id": "3ab22edcd7ceee7ea587231a01ad6820e0bdd975",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDMK4LvzftzWCu4\nH3/g4MzlzPGRnf9wdTEO8ZzM+2XB5H3ZWitrMK1h7eiGizsOrH9eYfWXk3lnhqNS\nUI8pWahTTxBDBRqVEdCMcAzSwb0402XWGbxcInR/Y8SUamk3vy7DqZPGM+6j4iX/\nqnu0XTCOQ6W6dbF5t3J/KmgAhIO6X3YeOfLC7ICGvoAnYlm2PA7Ipu5CnOrOw1QK\nLjqHI7MH4sjJQDtE1KDGPk/e6ErgzYAgdDdJqQQRyi4tcxOisDCyGxQAyvgjmqC7\nN3nMEX/CA75F9szxT5EnmFy8kOLlXovMMVt+IFSgyj45v+r7n0814oaK+KIKNDgt\n5f7JiitRAgMBAAECggEAYdEk4cw/gMMI6yVYSH6bXCvEvr3CQHg9IUo7k++MEIlu\njABJ1giTwNvRMAirqjuVqDvphI3Yt/NG8yx6classQErqthapHnM/0O9uQmuJPgP\nDbT1y/SL+O5tI6gZseYsOvzXOjnuRuEV0Hg23TJajYY2c+9oMIbl2awQ+NKEI/k2\nR3SepxZCTayuTXT7Sz0AJ12iRROZd7oTGp3nKvWb75A1qCrOam3CF1+Kej9vjooG\n0JVeKc5zrlT/NxyF2FBAY3mokEIgVDCtpwgbRkX0Gra5qLkJmluz0Y7WccTfHWzU\nyz9zRggR4m4r0/BRR1BesuhYzZZaDQAjRh+sdiu2CwKBgQDqAIDv2cmeHl251i28\neoIE0W/A/9JZLpOW0EDC4phSiA58SX8Cce4X6VKLqhHGZIFSLM4ekPoaMglA0jlm\nDHuyWUzzPCPgbpopNhmIbVFWyEWcluLwvI3pA9FJPkELATv3znJrWHmeGTdLwAnk\n5hRKF/Z+Hio3MTKo0KEYjz0SFwKBgQDfXRH7nrfYZFm20iFxn7MUvLrZzGL+XPAm\nM7PZnQdpzQC0KA340qu6plaBiO1hfvzK3UVNnT8h7e9MZeEx+gAHnxTwT1q2UmzB\ncJS0atgYTgtwDayTfwasM7hVxTXEHfmGUD8kzhYnAwvlAFQINxSLgCsZx56+gV+U\nxI8gOR4W1wKBgQDn0gPqmloRWYgE+VhqJvv0BgCutUIQtAHnIP1nlNDOwpeHLdCz\n/WahLbdnQd9GKn+rh1PUGFCN7xAXtazDmo5ZC/sd5XCtgSUcusnkzFgOn23HSfwd\n/s6gD/Ygl5ocauacA1x7WDV0GQsc8m1a5U0ockDyhLPR5d2IPNe72vvnlQKBgQC4\nmv5i3OILeZzgSbmUZC4pJHa1zYO/wOZGXJL3dx4KZoF/ZF9v2AZQxGtYseenncGm\nlMxTgnQMQc92b/l4Saw+oE848g0CBQuXsMlmd6vUIqS3XsXUPbcxGanvUYfHaBKz\n3JzjeWS7p3vsL6JEC+nyBeMZcm+T+e8aUH4OXsasjwKBgFMZC5+vHtxFo/gTizYa\n/5SQSWgkOdM5hcLxBw8CxW2lLhQVw6amtUkqTN1GDLXwq9Qs51eHdS98gNLVWvV2\n+nRVEMYqypnLGOHe9ChkzKIB13BIZ6DCIU4cPsmk8lMwTIkh+8qPH8GfSb1+kx2W\n5pOAO/vLEcpip0iU1C67Ufny\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@zerohungerconnect.iam.gserviceaccount.com",
+  "client_id": "110595490500077160086",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40zerohungerconnect.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
